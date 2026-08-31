@@ -1,0 +1,106 @@
+{
+  "uid": "ac039751-74d1-4fe6-bd22-685495aaa6d8",
+  "title": "PFA",
+  "panels": [
+    {
+      "id": 1, "title": "Répartition des patients par race", "type": "piechart",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
+      "datasource": {"type": "mysql", "uid": "mysql-ds"},
+      "targets": [{"rawSql": "SELECT race, COUNT(*) as count FROM table_tessst GROUP BY race", "format": "table", "refId": "A"}],
+      "fieldConfig": {"defaults": {"color": {"mode": "palette-classic"}}, "overrides": []}
+    },
+    {
+      "id": 2, "title": "Répartition des patients par genre", "type": "piechart",
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
+      "datasource": {"type": "mysql", "uid": "mysql-ds"},
+      "targets": [{"rawSql": "SELECT gender, COUNT(*) as count FROM table_tessst GROUP BY gender", "format": "table", "refId": "A"}],
+      "fieldConfig": {"defaults": {"color": {"mode": "palette-classic"}}, "overrides": []}
+    },
+    {
+      "id": 3, "title": "Répartition des patients par age", "type": "barchart",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8},
+      "datasource": {"type": "mysql", "uid": "mysql-ds"},
+      "targets": [{"rawSql": "SELECT age, COUNT(*) as count FROM table_tessst GROUP BY age ORDER BY age", "format": "table", "refId": "A"}],
+      "fieldConfig": {"defaults": {"color": {"mode": "palette-classic"}}, "overrides": []}
+    },
+    {
+      "id": 4, "title": "Temps moyen d'hospitalisation par race", "type": "barchart",
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8},
+      "datasource": {"type": "mysql", "uid": "mysql-ds"},
+      "targets": [{"rawSql": "SELECT race, AVG(time_in_hospital) as avg_time FROM table_tessst GROUP BY race", "format": "table", "refId": "A"}],
+      "fieldConfig": {"defaults": {"color": {"mode": "palette-classic"}}, "overrides": []}
+    },
+    {
+      "id": 5, "title": "Fréquence d'utilisation de l'insuline", "type": "piechart",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 16},
+      "datasource": {"type": "mysql", "uid": "mysql-ds"},
+      "targets": [{"rawSql": "SELECT insulin, COUNT(*) as count FROM table_tessst GROUP BY insulin", "format": "table", "refId": "A"}],
+      "fieldConfig": {"defaults": {"color": {"mode": "palette-classic"}}, "overrides": []}
+    },
+    {
+      "id": 6, "title": "Fréquence d'utilisation des autres médicaments", "type": "barchart",
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 16},
+      "datasource": {"type": "mysql", "uid": "mysql-ds"},
+      "targets": [{"rawSql": "SELECT 'metformin' as med, SUM(CASE WHEN metformin != 'No' THEN 1 ELSE 0 END) as count FROM table_tessst UNION ALL SELECT 'glipizide', SUM(CASE WHEN glipizide != 'No' THEN 1 ELSE 0 END) FROM table_tessst UNION ALL SELECT 'glyburide', SUM(CASE WHEN glyburide != 'No' THEN 1 ELSE 0 END) FROM table_tessst UNION ALL SELECT 'pioglitazone', SUM(CASE WHEN pioglitazone != 'No' THEN 1 ELSE 0 END) FROM table_tessst UNION ALL SELECT 'rosiglitazone', SUM(CASE WHEN rosiglitazone != 'No' THEN 1 ELSE 0 END) FROM table_tessst", "format": "table", "refId": "A"}],
+      "fieldConfig": {"defaults": {"color": {"mode": "palette-classic"}}, "overrides": []}
+    },
+    {
+      "id": 7, "title": "Fréquence des diagnostics principaux", "type": "barchart",
+      "gridPos": {"h": 8, "w": 24, "x": 0, "y": 24},
+      "datasource": {"type": "mysql", "uid": "mysql-ds"},
+      "targets": [{"rawSql": "SELECT diag_1, COUNT(*) as count FROM table_tessst GROUP BY diag_1 ORDER BY count DESC LIMIT 10", "format": "table", "refId": "A"}],
+      "fieldConfig": {"defaults": {"color": {"mode": "palette-classic"}}, "overrides": []}
+    },
+    {
+      "id": 8, "title": "Nombre total de patients", "type": "stat",
+      "gridPos": {"h": 4, "w": 8, "x": 0, "y": 32},
+      "datasource": {"type": "mysql", "uid": "mysql-ds"},
+      "targets": [{"rawSql": "SELECT COUNT(*) as total FROM table_tessst", "format": "table", "refId": "A"}],
+      "fieldConfig": {"defaults": {"color": {"mode": "fixed", "fixedColor": "blue"}}, "overrides": []}
+    },
+    {
+      "id": 9, "title": "Taux de réadmission", "type": "stat",
+      "gridPos": {"h": 4, "w": 8, "x": 8, "y": 32},
+      "datasource": {"type": "mysql", "uid": "mysql-ds"},
+      "targets": [{"rawSql": "SELECT ROUND(SUM(prediction)*100.0/COUNT(*), 2) as readmission_rate FROM table_tessst", "format": "table", "refId": "A"}],
+      "fieldConfig": {"defaults": {"unit": "percent", "color": {"mode": "fixed", "fixedColor": "red"}}, "overrides": []}
+    },
+    {
+      "id": 10, "title": "Probabilité moyenne de réadmission", "type": "stat",
+      "gridPos": {"h": 4, "w": 8, "x": 16, "y": 32},
+      "datasource": {"type": "mysql", "uid": "mysql-ds"},
+      "targets": [{"rawSql": "SELECT ROUND(AVG(proba_1)*100, 2) as avg_proba FROM table_tessst", "format": "table", "refId": "A"}],
+      "fieldConfig": {"defaults": {"unit": "percent", "color": {"mode": "fixed", "fixedColor": "orange"}}, "overrides": []}
+    },
+    {
+      "id": 12, "title": "Comparer les réadmissions selon race", "type": "barchart",
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 36},
+      "datasource": {"type": "mysql", "uid": "mysql-ds"},
+      "targets": [{"rawSql": "SELECT race, SUM(CASE WHEN prediction=1 THEN 1 ELSE 0 END) as readmitted, SUM(CASE WHEN prediction=0 THEN 1 ELSE 0 END) as not_readmitted FROM table_tessst GROUP BY race", "format": "table", "refId": "A"}],
+      "fieldConfig": {"defaults": {"color": {"mode": "palette-classic"}}, "overrides": []}
+    },
+    {
+      "id": 13, "title": "Comparer les réadmissions selon age", "type": "barchart",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 36},
+      "datasource": {"type": "mysql", "uid": "mysql-ds"},
+      "targets": [{"rawSql": "SELECT age, SUM(CASE WHEN prediction=1 THEN 1 ELSE 0 END) as readmitted, SUM(CASE WHEN prediction=0 THEN 1 ELSE 0 END) as not_readmitted FROM table_tessst GROUP BY age ORDER BY age", "format": "table", "refId": "A"}],
+      "fieldConfig": {"defaults": {"color": {"mode": "palette-classic"}}, "overrides": []}
+    },
+    {
+      "id": 14, "title": "Patients réadmis récemment", "type": "table",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 44},
+      "datasource": {"type": "mysql", "uid": "mysql-ds"},
+      "targets": [{"rawSql": "SELECT patient_nbr, race, gender, age, prediction, ROUND(proba_1, 3) as proba_readmission, timestamp FROM table_tessst WHERE prediction = 1 ORDER BY timestamp DESC LIMIT 20", "format": "table", "refId": "A"}]
+    },
+    {
+      "id": 15, "title": "Évolution des réadmissions dans le temps", "type": "timeseries",
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 44},
+      "datasource": {"type": "mysql", "uid": "mysql-ds"},
+      "targets": [{"rawSql": "SELECT timestamp as time, SUM(prediction) as readmissions, COUNT(*) as total FROM table_tessst GROUP BY timestamp ORDER BY timestamp", "format": "time_series", "refId": "A"}],
+      "fieldConfig": {"defaults": {"color": {"mode": "palette-classic"}}, "overrides": []}
+    }
+  ],
+  "refresh": "5s",
+  "time": {"from": "now-1h", "to": "now"},
+  "schemaVersion": 39
+}

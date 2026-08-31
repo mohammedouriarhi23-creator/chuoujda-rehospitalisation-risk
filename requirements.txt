@@ -1,0 +1,14 @@
+# Astro Runtime includes the following pre-installed providers packages: https://www.astronomer.io/docs/astro/runtime-image-architecture#provider-packages
+# requirements.txt
+apache-airflow-providers-apache-spark==4.11.3
+pyspark==3.4.3
+kafka-python==2.1.5
+pandas==2.2.3
+joblib==1.4.2
+scikit-learn==1.6.1
+lightgbm==4.6.0
+imblearn
+xgboost
+mlflow
+prometheus-client
+requests
